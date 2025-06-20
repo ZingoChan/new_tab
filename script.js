@@ -31,6 +31,20 @@ function getWeather() {
   });
 }
 
+function getCityName() {
+  fetch("https://ipapi.co/json/")
+    .then(res => res.json())
+    .then(data => {
+      const city = data.city;
+      const region = data.region;
+      document.querySelector(".city").textContent = `${city}, ${region}`;
+    })
+    .catch(() => {
+      document.querySelector(".city").textContent = "Unknown City";
+    });
+}
+
+getCityName();
 getWeather();
 updateTime();
 setInterval(updateTime, 1000); // update every 1 sec

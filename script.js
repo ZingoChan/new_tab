@@ -21,10 +21,8 @@ function getWeather() {
       .then(res => res.json())
       .then(data => {
         const temp = data.current.temperature_2m;
-        const city = "Your Area"; // You can get real city from another API if needed
-
         document.querySelector(".temperature").textContent = `🌡️ ${temp}°C`;
-        document.querySelector(".city").textContent = city;
+        // ❌ no more: document.querySelector(".city").textContent = city;
       });
   }, err => {
     console.error("Geo failed", err);
@@ -35,8 +33,8 @@ function getCityName() {
   fetch("https://ipapi.co/json/")
     .then(res => res.json())
     .then(data => {
-      const city = data.city;
-      const region = data.region;
+      const city = data.city || "Unknown";
+      const region = data.region || "";
       document.querySelector(".city").textContent = `${city}, ${region}`;
     })
     .catch(() => {

@@ -29,20 +29,35 @@ function getWeather() {
   });
 }
 
-function getCityName() {
-  fetch("https://ipapi.co/json/")
-    .then(res => res.json())
-    .then(data => {
-      const city = data.city || "Unknown";
-      const region = data.region || "";
-      document.querySelector(".city").textContent = `${city}, ${region}`;
-    })
-    .catch(() => {
-      document.querySelector(".city").textContent = "Unknown City";
-    });
+function getPreciseLocation() {
+  if (!navigator.geolocation) {
+    console.warn("Geolocation not supported.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+
+    // Reverse geocode with OSM
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+      .then(res => res.json())
+      .then(data => {
+        const address = data.address;
+        const city = address.city || address.town || address.village || address.hamlet || "Unknown";
+        const state = address.state || "";
+        document.querySelector(".city").textContent = `${city}, ${state}`;
+      })
+      .catch(() => {
+        document.querySelector(".city").textContent = "Unknown City";
+      });
+  }, err => {
+    console.warn("Geolocation error", err);
+    document.querySelector(".city").textContent = "Unknown City";
+  });
 }
 
-getCityName();
+getPreciseLocation(); 
 getWeather();
 updateTime();
 setInterval(updateTime, 1000); // update every 1 sec

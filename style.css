@@ -30,7 +30,8 @@ body {
   position: absolute;
   top: 40px;
   left: 60px;
-}
+  text-align: left;
+} 
 
 .clock {
   font-size: 64px;
